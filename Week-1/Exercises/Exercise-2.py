@@ -17,6 +17,9 @@ Write a for-loop that prints out the following line 20 times:
 
 print("Exercise 2.1")
 
+msg = "All work and no play makes Jack a dull boy."
+for i in range(20):
+      print(msg)
 pass
 
 print("---")
@@ -30,6 +33,8 @@ Write a for-loop that prints out the numbers from 0 up to 5 inclusive.
 
 print("Exercise 2.2")
 
+for i in range(6):
+      print(i)
 pass
 
 print("---")
@@ -45,6 +50,8 @@ Write a for-loop that prints out the EVEN numbers from 2 up to 8 inclusive.
 
 print("Exercise 2.3")
 
+for i in range(2,9,2):
+      print(i)
 pass
 
 print("---")
@@ -59,6 +66,8 @@ Now write another loop to print 9 through 0 (i.e., backwards).
 
 print("Exercise 2.4")
 
+for i in range(9,-1,-1):
+      print(i)
 pass
 
 print("---")
@@ -81,6 +90,8 @@ Write code that prints out the following sequence:
 
 print("Exercise 2.5")
 
+for i in range(9):
+      print(i*'z')
 pass
 
 print("---")
@@ -106,6 +117,10 @@ of a simple print-statement.
 
 print("Exercise 2.6")
 
+for i in range(6):
+      for j in range(i):
+            print(j+1, end= '')
+      print('')
 pass
 
 print("---")
@@ -134,7 +149,13 @@ your code needs to carry out for a certain value of rows.
 
 print("Exercise 2.7")
 
-rows = 5
+def pyramid(rows = 1):
+      for i in range(1,rows+1,1):
+            #added following line because in example above, when row = 1: example given has two leading spaces before the 'o' but there is only 1 leading space before the 'o's in the fifth row of row = 5
+            pad = (rows - i + 1) + (1 if rows == 1 else 0) 
+            print(' '* pad +'o'*(2*i-1))
+
+pyramid(10)
 pass
 
 print("---")
@@ -164,6 +185,14 @@ on how to align the numbers.
 """
 
 print("Exercise 2.8")
+
+def multiplicationTable(x = 9, y = 9):
+      for i in range(1,x+1):
+        for j in range(1, y+1):
+          print("{:4}".format(i*j), end='') #right align so digit matches digit
+        print('')
+
+multiplicationTable(10,10)
 
 pass
 

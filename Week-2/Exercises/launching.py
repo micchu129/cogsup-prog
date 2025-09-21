@@ -9,17 +9,13 @@ control.initialize(exp)
 square_red = stimuli.Rectangle((50,50), (255,0,0))
 square_green = stimuli.Rectangle((50,50), (0,255,0))
 
-#set position of square, red is left
-square_red.position = (-400, 0)
-square_green.position = (0, 0)
-
-#set global speed
-speed = 5
+square_1.position = (125, 0)
+square_2.position = (-125, 0)
 
 control.start(subject_id=1)
 
-square_red.present(clear=True, update=False)
-square_green.present(clear=False, update=True)
+square_1.present(clear=True, update=False)
+square_2.present(clear=False, update=True)
 
 exp.clock.wait(1000) #presents position for 1 second
 

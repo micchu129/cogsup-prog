@@ -1,7 +1,7 @@
 from expyriment import design, control, stimuli
 control.set_develop_mode()
 
-exp = design.Experiment(name = "Two Squares")
+exp = design.Experiment(name = "Launching")
 
 control.initialize(exp)
 

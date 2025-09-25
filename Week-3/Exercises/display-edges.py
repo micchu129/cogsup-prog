@@ -6,7 +6,7 @@ from expyriment import design, control, stimuli, misc
 
 # Global settings
 control.set_develop_mode()
-exp = design.Experiment() 
+exp = design.Experiment(name = "Display Edges") 
 control.initialize(exp) 
 screen_w, screen_h = exp.screen.size
 square_length = int(screen_w*.05)

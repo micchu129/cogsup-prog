@@ -1,10 +1,11 @@
 from expyriment import design, control, stimuli, misc 
-# control.set_develop_mode()
+
 
 # Get Color List
 # print(misc.Colour.get_colour_names())
 
 # Global settings
+control.set_develop_mode()
 exp = design.Experiment() 
 control.initialize(exp) 
 screen_w, screen_h = exp.screen.size

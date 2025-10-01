@@ -13,6 +13,8 @@ control.start(subject_id=1)
 fixation.present(clear=True, update=True)
 exp.clock.wait(500)
 
+# i understand this is not the goal of the exercise but... this is the quickest one line fix?
+fixation.present(clear=True, update=False)
 square.present(clear=False, update=True)
 exp.keyboard.wait()
 

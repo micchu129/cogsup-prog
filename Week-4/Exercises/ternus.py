@@ -1,12 +1,12 @@
 from expyriment import design, control, stimuli, misc
 
 """Globals"""
-fps = 60
-gap_ratio = 0.25 # currently set relative to diameter
-tag_ratio = 0.3 # size of tag relative to size of circles
-frames = 30
-circle_radius = 60
-high_isi = 18
+fps = 60 #fps defined by moniter hz
+gap_ratio = 0.25 # defines gap between circles, currently set relative to diameter
+tag_ratio = 0.3 # size of tags relative to size of circles
+frames_displayed = 30 #controls how long the stimuli is displayed for 
+circle_radius = 60 #self explanatory?
+high_isi = 18 #defining a high isi scenario to be used for both trial 2 and 3 (can be custom per trial)
 
 """helpers"""
 
@@ -43,27 +43,27 @@ def make_circles(circle_radius = int):
     return circles
 
 def add_tags(circles):
-    colors = ['yellow', 'red', 'green', 'yellow']
-    tags = [stimuli.Circle(circle_radius*tag_ratio, colour= misc.Colour(color)) for color in colors]
+    colors = ['yellow', 'red', 'green', 'yellow'] # define the list of colors to be used for tags, simpler to hardcode
+    tags = [stimuli.Circle(circle_radius*tag_ratio, colour= misc.Colour(color)) for color in colors] # create tags based on global circle_radius and amount of colors, attempted to write this for per set of circles but had trouble accessing value (not applicable in my implementation either)
     for i, circle in enumerate(circles):
-        tags[i].plot(circle)
+        tags[i].plot(circle) #plots each tag onto each circle with equivalent index. i realize this breaks if #colors != #circles but 
 
 def run_trial(circle_radius = int, isi = int, color_tags = False):
-    stimuli.TextLine(f"Circle Radius: {circle_radius} | ISI: {isi} ~ {isi*1000/fps}ms| Color Tags: {color_tags}", text_colour= misc.Colour('black')).present()
+    stimuli.TextLine(f"Circle Radius: {circle_radius} | ISI: {isi} ~ {isi*1000/fps}ms| Color Tags: {color_tags}", text_colour= misc.Colour('black')).present() #all in one line for compactness, displays the conditions of the coming trial (could be used as a verbose debug)
     exp.keyboard.wait()
     circles = make_circles(circle_radius)
     if color_tags:
         add_tags(circles)
     while True:
-        present_for(circles[:3],frames)
-        if isi: present_for([], isi)
-        present_for(circles[1:],frames)
-        if isi: present_for([], isi)
-        if exp.keyboard.check(misc.constants.K_SPACE):
+        present_for(circles[:3],frames_displayed) # displays first 3 circles for global defined duration
+        if isi: present_for([], isi) # checks if isi != 0, if not zero, then display nothing for ici frames
+        present_for(circles[1:],frames_displayed) # displayed last 3 circles for defined duration
+        if isi: present_for([], isi) # same as 2 lines above
+        if exp.keyboard.check(misc.constants.K_SPACE): #end loop when space is pressed
             break
 
 
-""" Test functions """
+""" experiment design """
 exp = design.Experiment(background_colour=misc.Colour('grey'))
 
 control.set_develop_mode()

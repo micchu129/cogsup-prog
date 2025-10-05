@@ -14,9 +14,9 @@ def load(stims):
     for stim in stims:
         stim.preload()
 
-def present_for(stims, frames=int):
-    exp.screen.clear()
+def present_for(stims, frames=fps): # default presentation = 1 second
     t0 = exp.clock.time
+    exp.screen.clear()
     for stim in stims:
         stim.present(False, False)
     exp.screen.update()

@@ -108,7 +108,6 @@ def run_trial(test_side):
 input_box = io.TextInput("Please enter which eye you would like to test for: either 'L' for 'left eye' or 'R' for 'right eye'")
 user_input = input_box.get()
 test_side = "".join(user_input.split()).upper() # catch just in case user inputs blank spaces or not capitalizes the testing side
-print(test_side)
 
 control.start(subject_id=1)
 

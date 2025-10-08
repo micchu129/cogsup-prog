@@ -5,7 +5,7 @@ from expyriment.misc import constants as consts
 exp = design.Experiment(name="Blindspot", background_colour= consts.C_WHITE, foreground_colour= consts.C_BLACK)
 # control.set_develop_mode()
 control.initialize(exp)
-exp.add_data_variable_names(["test_eye", "final_radius", "final_x",  "final_y"])
+exp.add_data_variable_names(["test_eye", "key_pressed", "current_radius", "x_coord",  "y_coord"])
 quartile = exp.screen.size[0]//4
 
 
@@ -58,12 +58,12 @@ def present_instructions(test_eye, cover_eye):
 def run_trial(test_side):
     init_radius = 75
 
-    if test_side == 'L' or test_side == 'LEFT':
+    if test_side == 'L' or test_side == "LEFT":
         test_eye, cover_eye = "LEFT", "RIGHT", 
         present_instructions(test_eye, cover_eye)
         fixation = stimuli.FixCross(size=(150, 150), line_width=10, position=[quartile, 0])
         circle = make_circle(init_radius, (-quartile,0))
-    elif test_side == 'R' or test_side == 'RIGHT':
+    elif test_side == 'R' or test_side == "RIGHT":
         test_eye, cover_eye = "RIGHT", "LEFT"
         present_instructions(test_eye, cover_eye)
         fixation = stimuli.FixCross(size=(150, 150), line_width=10, position=[-quartile, 0])
@@ -81,15 +81,15 @@ def run_trial(test_side):
     while True:
         radius0 = circle.radius
         (x0,y0) = circle.position
-        pos0 = circle.position
-        key, time = exp.keyboard.wait(keys = [consts.K_1, consts.K_2, consts.K_UP, consts.K_DOWN, consts.K_LEFT, consts.K_RIGHT, consts.K_SPACE])
+        key, _ = exp.keyboard.wait(keys = [consts.K_1, consts.K_2, consts.K_UP, consts.K_DOWN, consts.K_LEFT, consts.K_RIGHT, consts.K_SPACE])
+        exp.data.add([test_eye, key, radius0, x0, y0])
         if key == consts.K_SPACE:
             break
         elif key == consts.K_1 or key == consts.K_2:
             if key == consts.K_1:
-                circle = make_circle(radius0*.9, pos0)
+                circle = make_circle(radius0*.9, (x0,y0))
             elif key == consts.K_2:
-                circle = make_circle(radius0*1.1, pos0)
+                circle = make_circle(radius0*1.1, (x0,y0))
         else: 
             move_distance = radius0//3
             if key == consts.K_UP:
@@ -102,14 +102,13 @@ def run_trial(test_side):
                 circle = make_circle(radius0, (x0+move_distance,y0))
         fixation.present(True, False)
         circle.present(False, True)
-    
-    exp.data.add([test_eye, radius0, x0,  y0])
 
 """ Experiment Control """
 
 input_box = io.TextInput("Please enter which eye you would like to test for: either 'L' for 'left eye' or 'R' for 'right eye'")
-user_input = input_box.get() 
-test_side = "".join(user_input.split()).capitalize() # catch just in case user inputs blank spaces or not capitalizes the testing side
+user_input = input_box.get()
+test_side = "".join(user_input.split()).upper() # catch just in case user inputs blank spaces or not capitalizes the testing side
+print(test_side)
 
 control.start(subject_id=1)
 

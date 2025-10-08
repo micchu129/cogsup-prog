@@ -1,8 +1,10 @@
 data/**
 !/data/blindspot_001_202510081658.xpd
 !/data/blindspot_001.xpd
+!/data/blindspot_001_202510081715.xpd
 events/**
 !/events/blindspot_001_202510081658.xpe
+!/events/blindspot_001_202510081715.xpe
 Week-2/Exercises/data/
 Week-2/Exercises/events/
 

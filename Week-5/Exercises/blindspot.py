@@ -1,6 +1,8 @@
 from expyriment import design, control, stimuli, io
 from expyriment.misc import constants as consts
 
+# not sure if this is intended, but data & events are located in my repository's root folder
+
 """ Global settings """
 exp = design.Experiment(name="Blindspot", background_colour= consts.C_WHITE, foreground_colour= consts.C_BLACK)
 # control.set_develop_mode()

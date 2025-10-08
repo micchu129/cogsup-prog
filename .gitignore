@@ -1,2 +1,8 @@
-data/
-events/
+data/**
+!/data/blindspot_001_202510081658.xpd
+!/data/blindspot_001.xpd
+events/**
+!/events/blindspot_001_202510081658.xpe
+Week-2/Exercises/data/
+Week-2/Exercises/events/
+

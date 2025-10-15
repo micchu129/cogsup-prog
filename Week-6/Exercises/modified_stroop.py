@@ -4,10 +4,11 @@ from expyriment.misc import constants as consts
 ## Clarifications:
 """
 I had already completed the assignment the week before.
-I have chosen to continue using my code as I am familiar with its functions
+This version is based on my code as I am familiar with its functions
 and am able to manipulate its content as I wish.
 
 I have integrated from the assignment codes that improve upon my code.
+leaving this here just as covenience and reference to demonstrate I know how to do Exercise 1
 
 thank you for your understanding
 """

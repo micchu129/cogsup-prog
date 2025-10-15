@@ -1,89 +1,77 @@
-from expyriment import design, control, stimuli
-from expyriment.misc.constants import C_WHITE, C_BLACK, K_j, K_f
-import random
-
-""" Constants """
-KEYS = [K_j, K_f]
-TRIAL_TYPES = 
-COLORS =
-
-N_BLOCKS = 
-N_TRIALS_IN_BLOCK = 
-
-INSTR_START = """
-In this task, you have to indicate whether the meaning of a word and the color of its font match.
-Press J if they do, F if they don't.\n
-Press SPACE to continue.
-"""
-INSTR_MID = """You have finished half of the experiment, well done! Your task will be the same.\nTake a break then press SPACE to move on to the second half."""
-INSTR_END = """Well done!\nPress SPACE to quit the experiment."""
-
-FEEDBACK_CORRECT = """ """
-FEEDBACK_INCORRECT = """ """
-
-""" Helper functions """
-def load(stims):
-    for stim in stims:
-        stim.preload()
-
-def timed_draw(*stims):
-    t0 = exp.clock.time
-    exp.screen.clear()
-    for stim in stims:
-        stim.present(clear=False, update=False)
-    exp.screen.update()
-    t1 = exp.clock.time
-    return t1 - t0
-
-def present_for(*stims, t=1000):
-    dt = timed_draw(*stims)
-    exp.clock.wait(t - dt)
-
-def present_instructions(text):
-    instructions = stimuli.TextScreen(text=text, text_justification=0, heading="Instructions")
-    instructions.present()
-    exp.keyboard.wait()
+from expyriment import design, control, stimuli, io, misc
+from expyriment.misc import constants as consts
 
 """ Global settings """
-exp = design.Experiment(name="Stroop", background_colour=C_WHITE, foreground_colour=C_BLACK)
-exp.add_data_variable_names(['block_cnt', 'trial_cnt', 'trial_type', 'word', 'color', 'RT', 'correct'])
-
-control.set_develop_mode()
+exp = design.Experiment(name="Stroop", background_colour= consts.C_WHITE)
+# control.set_develop_mode()
 control.initialize(exp)
+exp.add_data_variable_names(["trial_block", "trial_number", "trial_type", "word_meaning", "text_color", "reaction_time", "accuracy"])
+colors = ['red', 'blue', 'green', 'orange']
 
 """ Stimuli """
-fixation = stimuli.FixCross()
-fixation.preload()
+def generate_word(trial_type):
+    color_index = design.randomise.rand_int(0, len(colors)-1)
+    if trial_type == 'mismatch':
+        text_index = design.randomise.rand_int(0, len(colors)-1)
+        while text_index == color_index: text_index = design.randomise.rand_int(0, len(colors)-1)
+        text, color = colors[text_index], colors[color_index]
+    else:
+        text, color = colors[color_index], colors[color_index]
+        
+    trial_stim = stimuli.TextLine(text,text_size=30, text_colour=misc.Colour(color))
+    return trial_stim, text, color
 
-stims = stims = {w: {c: stimuli.TextLine(w, text_colour=c) for c in COLORS} for w in COLORS}
-load([stims[w][c] for w in COLORS for c in COLORS])
+""" Functions """
+def present_instructions(trial_block):
+    stimuli.TextScreen(f"Stroop Test Trial Block {trial_block}","When the trials begins, you will be presented one of the following words:\nred, blue, green, orange\nand the word will be colored with one of the four colors.\n\nPress any key to continue instructions", heading_colour=consts.C_BLACK, text_colour=consts.C_BLACK).present()
+    exp.keyboard.wait()
+    stimuli.TextScreen(f"Stroop Test Trial Block {trial_block}","If the color of the word matches the written text, press the 'F' key.\nIf the color of the word does not match the written text, press the 'J' key.\nNote: Orange color can look a little yellow.\n\nPress any key to continue instructions", heading_colour=consts.C_BLACK, text_colour=consts.C_BLACK).present()
+    exp.keyboard.wait()
+    stimuli.TextScreen(f"Stroop Test Trial Block {trial_block}",f"The entire test will be split into 2 trial blocks, each with 10 trials (words presented)\nYou are currently on Trial Block {trial_block}, which means there are {(3-trial_block)*10} trials left.\n\nPress 'G' to begin trials", heading_colour=consts.C_BLACK, text_colour=consts.C_BLACK).present()
+    exp.keyboard.wait(keys = [consts.K_g])
+def present_feedback(accuracy):
+    if accuracy == 1:
+        stimuli.TextScreen("Corrrect! :D","The trial will continue in 1 second",heading_colour=consts.C_BLACK, text_colour=consts.C_BLACK).present()
+        exp.clock.wait(1000)
+    else:
+        stimuli.TextScreen("Incorrrect! :c","The trial will continue in 1 second",heading_colour=consts.C_BLACK, text_colour=consts.C_BLACK).present()
+        exp.clock.wait(1000)
 
-feedback_correct = stimuli.TextLine(FEEDBACK_CORRECT)
-feedback_incorrect = stimuli.TextLine(FEEDBACK_INCORRECT)
-load([feedback_correct, feedback_incorrect])
+""" Trial Function """
+def run_trial():
+    if design.randomise.coin_flip():
+        trial_type = 'mismatch'
+    else:
+        trial_type = 'match'
+    fixation = stimuli.FixCross()
+    word, word_meaning, text_color = generate_word(trial_type)
+    fixation.present(True, True)
+    exp.clock.wait(500)
+    word.present(True, True)
+    t0 = exp.clock.time
+    key, _ = exp.keyboard.wait(keys=[consts.K_f, consts.K_j])
+    if trial_type == 'mismatch' and key == consts.K_j:
+        accuracy = 1 
+    elif trial_type == 'match' and key == consts.K_f:
+        accuracy = 1 
+    else:
+        accuracy = 0
+    rt = exp.clock.time - t0
+    exp.data.add([[i+1, j+1, trial_type, word_meaning, text_color, rt, accuracy]])
+    present_feedback(accuracy)
 
-""" Experiment """
-def run_trial(block_id, trial_id, trial_type, word, color):
-    stim = stims[word][color]
-    present_for(fixation, t=500)
-    stim.present()
-    key, rt = exp.keyboard.wait(KEYS)
-    correct = key == K_j if trial_type == "match" else key == K_f
-    exp.data.add([block_id, trial_id, trial_type, word, color, rt, correct])
-    feedback = feedback_correct if correct else feedback_incorrect
-    present_for(feedback, t=1000)
+""" Experiment Control """
 
 control.start(subject_id=1)
 
-present_instructions(INSTR_START)
-for block_id in range(1, N_BLOCKS + 1):
-    for trial_id in range(1, N_TRIALS_IN_BLOCK + 1):
-        trial_type =
-        word = 
-        color = 
-        run_trial(block_id, trial_id, trial_type, word, color)
-    if block_id != N_BLOCKS:
-        present_instructions(INSTR_MID)
-present_instructions(INSTR_END)
+trial_block = range(2)
+
+for i in trial_block:
+    trials = range(10)
+    present_instructions(i+1)
+    for j in trials:
+        run_trial()
+
+
 
 control.end()

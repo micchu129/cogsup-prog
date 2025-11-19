@@ -37,7 +37,7 @@ You can now open the file with your preferred text editor. If you activated the 
 
 ## Basic skeleton: the list-of-trials timeline.
 
-We will dissect it in details together during the lecture.Tthe main take-away here is that you control your experiment via a timeline, which is a list of 'trials' ran in order.
+We will dissect it in details together during the lecture. The main take-away here is that you control your experiment via a timeline, which is a list of 'trials' ran in order.
 
 ### Exercise 1 (10 mn):
 

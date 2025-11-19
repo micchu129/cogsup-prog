@@ -1,0 +1,19 @@
+"rt","stimulus","response","trial_type","trial_index","plugin_version","time_elapsed"
+"703","
+        <p>Hello!</p>
+        <p>You will be taking part in a toy experiment.
+          You will see the letters 'F' or 'J' displayed on the screen.</p>
+        <p> Your role will be to press the key corresponding to the letter.</p>
+        <p>Press any key to continue.</p>
+        "," ","html-keyboard-response","0","2.1.0","705"
+"382","F","f","html-keyboard-response","1","2.1.0","1087"
+"null","","null","html-keyboard-response","2","2.1.0","1347"
+"919","J","j","html-keyboard-response","3","2.1.0","2267"
+"null","","null","html-keyboard-response","4","2.1.0","2530"
+"488","F","f","html-keyboard-response","5","2.1.0","3019"
+"null","","null","html-keyboard-response","6","2.1.0","3277"
+"474","J","j","html-keyboard-response","7","2.1.0","3751"
+"null","","null","html-keyboard-response","8","2.1.0","4015"
+"456","F","f","html-keyboard-response","9","2.1.0","4471"
+"null","","null","html-keyboard-response","10","2.1.0","4722"
+"418","J","j","html-keyboard-response","11","2.1.0","5141"

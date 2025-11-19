@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="https://unpkg.com/jspsych@8.2.2"></script>
+    <link href="https://unpkg.com/jspsych@8.2.2/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
+  </head>
+  <body></body>
+  <script type="text/javascript">
+    const jsPsych = initJsPsych({
+      on_finish: function(){
+        jsPsych.data.get().localSave("csv", "exercise02b_results.csv");
+      }
+    });
+
+    const instructions = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+        <p>Hello!</p>
+        <p>You will be taking part in a toy experiment.
+          You will see the letters 'F' or 'J' displayed on the screen.</p>
+        <p> Your role will be to press the key corresponding to the letter.</p>
+        <p>Press any key to continue.</p>
+        `
+    };
+    const selectKey = {
+      type: jsPsychHtmlKeyboardResponse,
+      timeline: [
+        {
+            stimulus: jsPsych.timelineVariable('key'),
+            choices: ['F', 'J']
+        },
+        {
+            stimulus: '',
+            choices: "NO_KEYS",
+            trial_duration: 50
+        }
+      ],
+      timeline_variables: [
+        { key: 'F'},
+        { key: 'J'}
+      ],
+      sample: {
+        type: 'fixed-repetitions',
+        size: 10
+      }
+    };
+
+    let timeline = [instructions, selectKey]
+
+    jsPsych.run(timeline);
+  </script>
+</html>

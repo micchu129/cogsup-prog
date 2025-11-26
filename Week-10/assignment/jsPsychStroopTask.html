@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
   <head>
     <title>Stroop Assignment</title>
     <script src="https://unpkg.com/jspsych@8.2.2"></script>
@@ -7,7 +7,11 @@
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
   </head>
   <body></body>
+  <!-- I understand experiment is not ideally counterbalanced -->
   <script type="text/javascript">
+
+    const COLORS = ['red', 'blue', 'green', 'orange'];
+
     const jsPsych = initJsPsych({
       on_finish: function(){
         jsPsych.data.get().localSave("csv", "week09Assignment_results.csv");
@@ -23,12 +27,13 @@
         <p>You will be taking part in a stroop experiment.
           You will see one the following words displayed:</p>
           <ul>
-            <li>'red'</li>
-            <li>'blue'</li>
-            <li>'yellow'</li>
-            <li>'green'</li>
+            <li style = color:Red;>'red'</li>
+            <li style = color:Blue;>'blue'</li>
+            <li style = color:Orange;>'orange'</li>
+            <li style = color:Green;>'green'</li>
           </ul>
-        <p>And the displayed word will be colored in one of the four colors.</p>
+        <p>And the displayed word will be colored in one of the four colors.
+          Not necessarily in the same color as shown above</p>
         <br>
         <p>Press any key to continue.</p>
         `
@@ -43,36 +48,42 @@
       ],
       
     };
+
+    let stroop_trials = [];
+    for (let w of COLORS) {
+      for (let c of COLORS) {
+        stroop_trials.push({
+          word: w,
+          color: c,
+          trial_type: w === c ? 'match' : 'mismatch'
+        });
+      }
+    }
+
     const showWord = {
       type: jsPsychHtmlKeyboardResponse,
       timeline: [
         {
-            stimulus: jsPsych.timelineVariable('word'),
-            choices: ['F', 'J']
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: '+',
+            choices: "NO_KEYS",
+            trial_duration: 500
         },
         {
-            stimulus: '',
-            choices: "NO_KEYS",
-            trial_duration: 100
+            stimulus: function(){
+                const html = `
+                    <p style = color:${jsPsych.evaluateTimelineVariable('color')};>${jsPsych.evaluateTimelineVariable('word')}</p>`;
+                return html;
+            },
+            choices: ['F', 'J']
         }
       ],
-      timeline_variables: [
-        { word: 'red'},
-        { word: 'blue'},
-        { word: 'green'},
-        { word: 'yellow'},
-        { color: 'red'},
-        { color: 'blue'},
-        { color: 'green'},
-        { color: 'yellow'}
-      ],
-      sample: {
-        type: 'fixed-repetitions',
-        size: 3
-      }
+      timeline_variables: stroop_trials,
+      randomize_order: true
     };
 
   </script>
+  
   <script type="text/javascript">
     let timeline = [instructions, showWord]
     jsPsych.run(timeline);

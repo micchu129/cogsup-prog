@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Key Press Week 11</title>
+    <script src="https://unpkg.com/jspsych@8.2.2"></script>
+    <link href="https://unpkg.com/jspsych@8.2.2/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-slider-response@2.1.0"></script>
+  </head>
+  <body></body>
+  <script type="text/javascript">
+    const jsPsych = initJsPsych({
+      on_finish: function(){
+        jsPsych.data.get().localSave("csv", "week11exercise.csv");
+      }
+    });
+
+    const instructions = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+        <p>Hello!</p>
+        <p>You will be taking part in a toy experiment.
+          You will see the letters 'F' or 'J' displayed on the screen.</p>
+        <p> Your role will be to press the key corresponding to the letter.</p>
+        <p>Press any key to continue.</p>
+        `
+    };
+    const selectKey = {
+      type: jsPsychHtmlKeyboardResponse,
+      timeline: [
+        {
+            stimulus: '+',
+            choices: "NO_KEYS",
+            trial_duration: 500,
+            record_data: false
+        },
+        {
+            stimulus: jsPsych.timelineVariable('key'),
+            choices: ['F', 'J'],
+            stimulus_duration:1000,
+            trial_duration: 1500,
+            save_timeline_variables: true,
+            save_trial_parameters: {}
+            //post_trial_gap: 50 
+            /* not sure if this is necessary since there's a .5 second gap after stimulus */
+        },
+        {
+            type: jsPsychHtmlSliderResponse,
+            labels: [
+              '0%',
+              '25%',
+              '50%',
+              '75%',
+              '100%'
+            ],
+            stimulus: 'How confident are you?'
+        }
+      ],
+      
+      timeline_variables: [
+        { key: 'F'},
+        { key: 'J'},
+        { key: 'f'},
+        { key: 'j'}
+      ],
+      sample: {
+        type: 'fixed-repetitions',
+        size: 6
+      }
+    };
+
+    let timeline = [instructions, selectKey]
+
+    jsPsych.run(timeline);
+  </script>
+</html>

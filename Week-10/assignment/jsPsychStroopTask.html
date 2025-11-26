@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stroop Assignment</title>
+    <script src="https://unpkg.com/jspsych@8.2.2"></script>
+    <link href="https://unpkg.com/jspsych@8.2.2/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
+  </head>
+  <body></body>
+  <script type="text/javascript">
+    const jsPsych = initJsPsych({
+      on_finish: function(){
+        jsPsych.data.get().localSave("csv", "week09Assignment_results.csv");
+      }
+    });
+
+    const instructions = {
+      type: jsPsychHtmlKeyboardResponse,
+      timeline: [
+        {
+            stimulus: `
+        <p>Hello!</p>
+        <p>You will be taking part in a stroop experiment.
+          You will see one the following words displayed:</p>
+          <ul>
+            <li>'red'</li>
+            <li>'blue'</li>
+            <li>'yellow'</li>
+            <li>'green'</li>
+          </ul>
+        <p>And the displayed word will be colored in one of the four colors.</p>
+        <br>
+        <p>Press any key to continue.</p>
+        `
+        },
+        {
+            stimulus: `
+        <p>Your role will be to press the 'F' key when the word corresponds to the actual color,<br>
+            or press the 'J' key when the word and color is mismatched.</p>
+        <p>Press any key to continue.</p>
+        `
+        }
+      ],
+      
+    };
+    const showWord = {
+      type: jsPsychHtmlKeyboardResponse,
+      timeline: [
+        {
+            stimulus: jsPsych.timelineVariable('word'),
+            choices: ['F', 'J']
+        },
+        {
+            stimulus: '',
+            choices: "NO_KEYS",
+            trial_duration: 100
+        }
+      ],
+      timeline_variables: [
+        { word: 'red'},
+        { word: 'blue'},
+        { word: 'green'},
+        { word: 'yellow'},
+        { color: 'red'},
+        { color: 'blue'},
+        { color: 'green'},
+        { color: 'yellow'}
+      ],
+      sample: {
+        type: 'fixed-repetitions',
+        size: 3
+      }
+    };
+
+  </script>
+  <script type="text/javascript">
+    let timeline = [instructions, showWord]
+    jsPsych.run(timeline);
+  </script>
+</html>

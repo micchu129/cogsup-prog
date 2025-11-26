@@ -38,11 +38,15 @@
             stimulus: jsPsych.timelineVariable('key'),
             choices: ['F', 'J'],
             stimulus_duration:1000,
-            trial_duration: 1500,
+            trial_duration: 1250,
             save_timeline_variables: true,
             save_trial_parameters: {}
             //post_trial_gap: 50 
-            /* not sure if this is necessary since there's a .5 second gap after stimulus */
+            /* 
+            not sure if this is necessary since 
+            there's a .25 second gap after stimulus 
+            due to stimulus_duration and trial_duration
+            */
         },
         {
             type: jsPsychHtmlSliderResponse,
@@ -60,8 +64,8 @@
       timeline_variables: [
         { key: 'F'},
         { key: 'J'},
-        { key: 'f'},
-        { key: 'j'}
+        { key: 'F'.toLowerCase()},
+        { key: 'J'.toLowerCase()}
       ],
       sample: {
         type: 'fixed-repetitions',
